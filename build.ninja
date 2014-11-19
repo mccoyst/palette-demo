@@ -1,0 +1,14 @@
+cxxflags = -std=c++11 -Wall -Werror
+ldflags = -framework SDL2 -framework SDL2_image -framework OpenGL -lGLEW
+
+rule cx
+ command = clang++ $cxxflags -c $in -o $out
+ description = cx $in
+
+rule ld
+ command = clang++ $ldflags $in -o $out
+ description = linking $out
+
+build main.o: cx main.cxx
+
+build demo: ld main.o
