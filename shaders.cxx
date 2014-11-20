@@ -7,7 +7,7 @@ static void check_status(GLuint);
 
 GLint init_shaders(){
 	const GLchar* vsrc =
-		"#version 410 core\n"
+		"#version 150 core\n"
 		"in vec2 position;"
 		"in vec2 texcoord;"
 		"out vec2 Texcoord;"
