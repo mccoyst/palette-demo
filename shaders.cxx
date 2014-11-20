@@ -39,9 +39,20 @@ GLint init_shaders(){
 	glAttachShader(p, fs);
 	glBindFragDataLocation(p, 0, "outColor");
 	glLinkProgram(p);
-	glUseProgram(p);
+	GLint ok = 0;
+	glGetProgramiv(p, GL_LINK_STATUS, &ok);
+	if(ok){
+		glUseProgram(p);
+		return p;
+	}
 
-	return p;
+	GLint n = 0;
+	glGetProgramiv(p, GL_INFO_LOG_LENGTH, &n);
+	char *msg = new char[n+1];
+	glGetProgramInfoLog(p, n, nullptr, msg);
+	std::cerr << "program: " << msg << '\n';
+	exit(1);
+	return 0;
 }
 
 static void check_status(GLuint s){
@@ -55,7 +66,7 @@ static void check_status(GLuint s){
 	glGetShaderiv(s, GL_INFO_LOG_LENGTH, &n);
 	char *msg = new char[n+1];
 	glGetShaderInfoLog(s, n, nullptr, msg);
-	std::cerr << "vertex shader: " << msg << '\n';
+	std::cerr << "shader: " << msg << '\n';
 	exit(1);
 }
 
