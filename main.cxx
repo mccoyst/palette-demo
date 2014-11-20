@@ -1,13 +1,22 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
+
+GLint init_shaders();
+void load_texture(const char*);
 
 int main(int argc, char *argv[]){
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		std::cerr << "SDL_Init: " << SDL_GetError() << '\n';
 		return 1;
 	}
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 	auto win = SDL_CreateWindow("palette?",
 		SDL_WINDOWPOS_CENTERED,
@@ -27,35 +36,46 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 
-	auto rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-	if(!rend){
-		std::cerr << "SDL_CreateRenderer: " << SDL_GetError() << '\n';
-		return 1;
-	}
+	std::cerr << glGetString(GL_VERSION) << '\n';
+	std::cerr << glGetString(GL_SHADING_LANGUAGE_VERSION) << '\n';
 
-	auto surf = IMG_Load("meow.png");
-	if(!surf){
-		std::cerr << "IMG_Load: " << IMG_GetError() << '\n';
-		return 1;
-	}
+	auto p = init_shaders();
 
-	auto tex = SDL_CreateTextureFromSurface(rend, surf);
-	if(!tex){
-		std::cerr << "SDL_CreateTextureFromSurface: " << SDL_GetError() << '\n';
-		return 1;
-	}
-	SDL_FreeSurface(surf);
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+
+	GLfloat verts[] = {
+		-0.5f,  0.5f, 0.0f, 0.0f, // Top-left
+		0.5f,  0.5f, 1.0f, 0.0f, // Top-right
+		0.5f, -0.5f, 1.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 0.0f, 1.0f  // Bottom-left
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+
+	GLuint elems[] = { 0, 1, 2, 2, 3, 0 };
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elems), elems, GL_STATIC_DRAW);
+
+	GLint pos = glGetAttribLocation(p, "position");
+	glEnableVertexAttribArray(pos);
+	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[7]), 0);
+
+	GLint texcoord = glGetAttribLocation(p, "texcoord");
+	glEnableVertexAttribArray(texcoord);
+	glVertexAttribPointer(texcoord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[7]), (void*)(2*sizeof(GLfloat)));
+
+	glActiveTexture(GL_TEXTURE0);
+	load_texture("meow.png");
+	glUniform1i(glGetUniformLocation(p, "sampo"), 0);
 
 	glClearColor(0,0,0,0);
 	glClear(GL_COLOR_BUFFER_BIT);
-	SDL_Rect dr = {
-		0, 0,
-		32, 32,
-	};
-	if(SDL_RenderCopy(rend, tex, nullptr, &dr) < 0){
-		std::cerr << "SDL_RenderCopy: " << SDL_GetError() << '\n';
-		return 1;
-	}
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	SDL_GL_SwapWindow(win);
 
 	SDL_Delay(1000);

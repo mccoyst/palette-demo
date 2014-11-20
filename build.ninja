@@ -10,5 +10,7 @@ rule ld
  description = linking $out
 
 build main.o: cx main.cxx
+build shaders.o: cx shaders.cxx
+build tex.o: cx tex.cxx
 
-build demo: ld main.o
+build demo: ld main.o shaders.o tex.o
