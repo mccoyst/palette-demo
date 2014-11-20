@@ -23,9 +23,6 @@ GLint init_shaders(){
 		"void main() {"
 		"	outColor = vec4(1.0,1.0,1.0,1.0);//texture(sampo, Texcoord);\n"
 		"}";
-	std::cerr << glGetString(GL_VERSION) << '\n';
-	std::cerr << glGetString(GL_SHADING_LANGUAGE_VERSION) << '\n';
-
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vs, 1, &vsrc, NULL);
@@ -40,6 +37,7 @@ GLint init_shaders(){
 	GLuint p = glCreateProgram();
 	glAttachShader(p, vs);
 	glAttachShader(p, fs);
+	glBindFragDataLocation(p, 0, "outColor");
 	glLinkProgram(p);
 	glUseProgram(p);
 

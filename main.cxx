@@ -54,20 +54,20 @@ int main(int argc, char *argv[]){
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 
+	GLint pos = glGetAttribLocation(p, "position");
+	glEnableVertexAttribArray(pos);
+	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), 0);
+
+	GLint texcoord = glGetAttribLocation(p, "texcoord");
+	glEnableVertexAttribArray(texcoord);
+	glVertexAttribPointer(texcoord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), (void*)(sizeof(GLfloat[2])));
+
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
 
 	GLuint elems[] = { 0, 1, 2, 2, 3, 0 };
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elems), elems, GL_STATIC_DRAW);
-
-	GLint pos = glGetAttribLocation(p, "position");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[7]), 0);
-
-	GLint texcoord = glGetAttribLocation(p, "texcoord");
-	glEnableVertexAttribArray(texcoord);
-	glVertexAttribPointer(texcoord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[7]), (void*)(2*sizeof(GLfloat)));
 
 	glActiveTexture(GL_TEXTURE0);
 	load_texture("meow.png");
