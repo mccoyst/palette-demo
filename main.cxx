@@ -45,10 +45,9 @@ int main(int argc, char *argv[]){
 	glGenBuffers(1, &vbo);
 
 	GLfloat verts[] = {
-		-0.5f,  0.5f, 0.0f, 0.0f, // Top-left
-		0.5f,  0.5f, 1.0f, 0.0f, // Top-right
-		0.5f, -0.5f, 1.0f, 1.0f, // Bottom-right
-		-0.5f, -0.5f, 0.0f, 1.0f  // Bottom-left
+		0.0, 0.5,
+		0.5, -0.5,
+		-0.5, -0.5,
 	};
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -56,26 +55,14 @@ int main(int argc, char *argv[]){
 
 	GLint pos = glGetAttribLocation(p, "position");
 	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), 0);
-
-	GLint texcoord = glGetAttribLocation(p, "texcoord");
-	glEnableVertexAttribArray(texcoord);
-	glVertexAttribPointer(texcoord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), (void*)(sizeof(GLfloat[2])));
+	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
 
-	GLuint elems[] = { 0, 1, 2, 2, 3, 0 };
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elems), elems, GL_STATIC_DRAW);
-
-	glActiveTexture(GL_TEXTURE0);
-	load_texture("meow.png");
-	glUniform1i(glGetUniformLocation(p, "sampo"), 0);
-
 	glClearColor(0,0,0,0);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 	SDL_GL_SwapWindow(win);
 
 	SDL_Delay(1000);

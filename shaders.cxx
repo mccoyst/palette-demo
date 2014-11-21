@@ -7,21 +7,16 @@ static void check_status(GLuint);
 
 GLint init_shaders(){
 	const GLchar* vsrc =
-		"#version 150 core\n"
+		"#version 150\n"
 		"in vec2 position;"
-		"in vec2 texcoord;"
-		"out vec2 Texcoord;"
 		"void main() {"
-		"	Texcoord = texcoord;"
 		"	gl_Position = vec4(position, 0.0, 1.0);"
 		"}";
 	const GLchar* fsrc =
-		"#version 150 core\n"
-		"in vec2 Texcoord;"
+		"#version 150\n"
 		"out vec4 outColor;"
-		"uniform sampler2D sampo;"
 		"void main() {"
-		"	outColor = vec4(1.0,1.0,1.0,1.0);//texture(sampo, Texcoord);\n"
+		"	outColor = vec4(1.0,1.0,1.0,1.0);"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
