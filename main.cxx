@@ -75,10 +75,10 @@ int main(int argc, char *argv[]){
 	std::cerr << "...\n";
 
 	GLfloat verts[] = {
-		-0.5f,  0.5f,
-		0.5f,  0.5f,
-		0.5f, -0.5f,
-		-0.5f, -0.5f,
+		-0.5f,  0.5f, 0.0f, 0.0f,
+		0.5f,  0.5f, 1.0f, 0.0f,
+		0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, -0.5f, 0.0f, 1.0f,
 	};
 
 	GLuint elems[] = { 0, 1, 2, 2, 3, 0 };
@@ -113,7 +113,18 @@ int main(int argc, char *argv[]){
 	check();
 	glEnableVertexAttribArray(pos);
 	check();
-	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), 0);
+	check();
+
+	GLint texcoord = glGetAttribLocation(p, "texcoord");
+	check();
+	glEnableVertexAttribArray(texcoord);
+	check();
+	glVertexAttribPointer(texcoord, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat[4]), (void*)sizeof(GLfloat[2]));
+	check();
+
+	load_texture("meow.png");
+	glUniform1i(glGetUniformLocation(p, "sampo"), 0);
 	check();
 
 	glClearColor(0.5,0,0,1);

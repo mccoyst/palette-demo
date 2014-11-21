@@ -9,14 +9,19 @@ GLint init_shaders(){
 	const GLchar* vsrc =
 		"#version 150\n"
 		"in vec2 position;"
+		"in vec2 texcoord;"
+		"out vec2 ftex;"
 		"void main() {"
 		"	gl_Position = vec4(position, 0.0, 1.0);"
+		"	ftex = texcoord;"
 		"}";
 	const GLchar* fsrc =
 		"#version 150\n"
+		"in vec2 ftex;"
 		"out vec4 outColor;"
+		"uniform sampler2D sampo;"
 		"void main() {"
-		"	outColor = vec4(1.0,1.0,1.0,1.0);"
+		"	outColor = texture(sampo, ftex);"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
