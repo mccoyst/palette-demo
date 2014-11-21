@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
 	}
 
 	SDL_GL_CreateContext(win);
+	glewExperimental = GL_TRUE; 
 	auto err = glewInit();
 	if(err != GLEW_OK){
 		std::cerr << "glewinit: " << glewGetErrorString(err) << '\n';
@@ -78,6 +79,12 @@ int main(int argc, char *argv[]){
 		0.5, -0.5,
 		-0.5, -0.5,
 	};
+
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	check();
+	glBindVertexArray(vao);
+	check();
 
 	GLuint vbo;
 	glGenBuffers(1, &vbo);
