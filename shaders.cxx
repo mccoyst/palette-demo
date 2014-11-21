@@ -21,7 +21,11 @@ GLint init_shaders(){
 		"out vec4 outColor;"
 		"uniform sampler2D sampo;"
 		"void main() {"
-		"	outColor = texture(sampo, ftex);"
+		"	vec4 c = texture(sampo, ftex);"
+		"	if(c.r == 1.0) outColor = vec4(0.5, 0.25, 0.25, 1.0);"
+		"	else if(c.g == 1.0) outColor = vec4(0.25, 0.5, 0.25, 1.0);"
+		"	else if(c.b == 1.0) outColor = vec4(0.25, 0.25, 0.5, 1.0);"
+		"	else outColor = c;"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
