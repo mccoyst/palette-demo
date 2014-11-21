@@ -5,7 +5,7 @@
 GLint init_shaders();
 void load_texture(const char*);
 
-void print_glerr(GLenum err, int line){
+static void print_glerr(GLenum err, int line){
 #define x(e) case e: std::cerr << __FILE__ << ':' << line << ": " << #e << '\n'; break;
 	switch(err){
 	x(GL_INVALID_ENUM)
@@ -19,7 +19,7 @@ void print_glerr(GLenum err, int line){
 #undef x
 }
 
-void check_gl(int line){
+static void check_gl(int line){
 	auto err = glGetError();
 	if(err == GL_NO_ERROR){
 		return;
@@ -73,6 +73,11 @@ int main(int argc, char *argv[]){
 		print_glerr(err, __LINE__);
 	}
 	std::cerr << "...\n";
+
+	glEnable(GL_BLEND);
+	check();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	check();
 
 	GLfloat verts[] = {
 		-0.5f,  0.5f, 0.0f, 0.0f,
