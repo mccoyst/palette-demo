@@ -75,10 +75,13 @@ int main(int argc, char *argv[]){
 	std::cerr << "...\n";
 
 	GLfloat verts[] = {
-		0.0, 0.5,
-		0.5, -0.5,
-		-0.5, -0.5,
+		-0.5f,  0.5f,
+		0.5f,  0.5f,
+		0.5f, -0.5f,
+		-0.5f, -0.5f,
 	};
+
+	GLuint elems[] = { 0, 1, 2, 2, 3, 0 };
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
@@ -95,6 +98,14 @@ int main(int argc, char *argv[]){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
 	check();
 
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+	check();
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	check();
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elems), elems, GL_STATIC_DRAW);
+
 	auto p = init_shaders();
 	check();
 
@@ -109,7 +120,7 @@ int main(int argc, char *argv[]){
 	check();
 	glClear(GL_COLOR_BUFFER_BIT);
 	check();
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	check();
 	SDL_GL_SwapWindow(win);
 
