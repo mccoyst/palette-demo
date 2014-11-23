@@ -20,12 +20,10 @@ GLint init_shaders(){
 		"in vec2 ftex;"
 		"out vec4 outColor;"
 		"uniform sampler2D sampo;"
+		"uniform vec3 palette[4];"
 		"void main() {"
 		"	vec4 c = texture(sampo, ftex);"
-		"	if(c.r == 1.0) outColor = vec4(0.5, 0.25, 0.25, 1.0);"
-		"	else if(c.g == 1.0) outColor = vec4(0.25, 0.5, 0.25, 1.0);"
-		"	else if(c.b == 1.0) outColor = vec4(0.25, 0.25, 0.5, 1.0);"
-		"	else outColor = c;"
+		"	outColor = vec4(palette[int(c.r*4.0)], c.a);"
 		"}";
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);

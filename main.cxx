@@ -86,6 +86,13 @@ int main(int argc, char *argv[]){
 
 	load_texture("meow.png");
 	glUniform1i(glGetUniformLocation(p, "sampo"), 0);
+	GLfloat palette[] = {
+		0.0, 0.5, 0.5,
+		0.5, 0.5, 0.0,
+		0.0, 0.5, 0.0,
+		0.0, 0.0, 0.5,
+	};
+	glUniform3fv(glGetUniformLocation(p, "palette"), 4, palette);
 
 	glClearColor(0.5,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT);
