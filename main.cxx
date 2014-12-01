@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
@@ -92,14 +93,31 @@ int main(int argc, char *argv[]){
 		0.0, 0.5, 0.0,
 		0.0, 0.0, 0.5,
 	};
-	glUniform3fv(glGetUniformLocation(p, "palette"), 4, palette);
 
-	glClearColor(0.5,0,0,1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	SDL_GL_SwapWindow(win);
+	GLint pal = glGetUniformLocation(p, "palette");
+	glUniform3fv(pal, 4, palette);
 
-	SDL_Delay(1000);
+	for(;;){
+		SDL_Event e;
+		while(SDL_PollEvent(&e)){
+			if(e.type == SDL_QUIT){
+				exit(0);
+			}
+		}
+
+		glClearColor(0,0,0,1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		SDL_GL_SwapWindow(win);
+
+		bool ok = std::next_permutation(std::begin(palette), std::end(palette));
+		if(!ok){
+			std::sort(std::begin(palette), std::end(palette));
+		}
+		glUniform3fv(pal, 4, palette);
+
+		SDL_Delay(125);
+	}
 	
 	return 0;
 }
